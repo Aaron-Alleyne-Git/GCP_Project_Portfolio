@@ -1,0 +1,36 @@
+# kubernetes/helm-charts/event-processor/values.yaml
+replicaCount: 3
+
+image:
+  repository: gcr.io/PROJECT_ID/event-processor
+  tag: "1.0.0"
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  annotations:
+    iam.gke.io/gcp-service-account: event-processor@PROJECT_ID.iam.gserviceaccount.com
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+
+env:
+  - name: PROJECT_ID
+    value: "PROJECT_ID"
+  - name: SUBSCRIPTION_ID
+    value: "email-events-subscription"
+  - name: DATASET_ID
+    value: "email_events"
+  - name: TABLE_ID
+    value: "events"
